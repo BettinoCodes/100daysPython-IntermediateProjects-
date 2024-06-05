@@ -1,0 +1,259 @@
+import os
+#Day 15 making a coffee machine from scrap, can do more validations, etc but has the requirements and more
+#future note maybe add a validation so that you wouldn't need to add more coins if you have the minimum amount for a purchase in the menu
+# Coffee Machine Program Requirements
+# 1. Prompt user by asking “What would you like? (espresso/latte/cappuccino):”
+# a. Check the user’s input to decide what to do next.
+# b. The prompt should show every time action has completed, e.g. once the drink is
+# dispensed. The prompt should show again to serve the next customer.
+# 2. Turn off the Coffee Machine by entering “off” to the prompt.
+# a. For maintainers of the coffee machine, they can use “off” as the secret word to turn off
+# the machine. Your code should end execution when this happens.
+# 3. Print report.
+# a. When the user enters “report” to the prompt, a report should be generated that shows
+# the current resource values. e.g.
+# Water: 100ml
+# Milk: 50ml
+# Coffee: 76g
+# Money: $2.5
+# 4. Check resources sufficient?
+# a. When the user chooses a drink, the program should check if there are enough
+# resources to make that drink.
+# b. E.g. if Latte requires 200ml water but there is only 100ml left in the machine. It should
+# not continue to make the drink but print: “Sorry there is not enough water.”
+# c. The same should happen if another resource is depleted, e.g. milk or coffee.
+# 5. Process coins.
+# a. If there are sufficient resources to make the drink selected, then the program should
+# prompt the user to insert coins.
+# b. Remember that quarters = $0.25, dimes = $0.10, nickles = $0.05, pennies = $0.01
+# c. Calculate the monetary value of the coins inserted. E.g. 1 quarter, 2 dimes, 1 nickel, 2
+# pennies = 0.25 + 0.1 x 2 + 0.05 + 0.01 x 2 = $0.52
+# 6. Check transaction successful?
+# a. Check that the user has inserted enough money to purchase the drink they selected.
+# E.g Latte cost $2.50, but they only inserted $0.52 then after counting the coins the
+# program should say “Sorry that's not enough money. Money refunded.”.
+# b. But if the user has inserted enough money, then the cost of the drink gets added to the
+# machine as the profit and this will be reflected the next time “report” is triggered. E.g.
+# Water: 100ml
+# Milk: 50ml
+# Coffee: 76g
+# Money: $2.5
+# c. If the user has inserted too much money, the machine should offer change.
+# E.g. “Here is $2.45 dollars in change.” The change should be rounded to 2 decimal
+# places.
+# 7. Make Coffee.
+# a. If the transaction is successful and there are enough resources to make the drink the
+# user selected, then the ingredients to make the drink should be deducted from the
+# coffee machine resources.
+# E.g. report before purchasing latte:
+# Water: 300ml
+# Milk: 200ml
+# Coffee: 100g
+# Money: $0
+# Report after purchasing latte:
+# Water: 100ml
+# Milk: 50ml
+# Coffee: 76g
+# Money: $2.5
+# b. Once all resources have been deducted, tell the user “Here is your latte. Enjoy!”. If
+# latte was their choice of drink.
+
+MENU = {
+    "espresso": {"ingredients": {"water": 50, "coffee": 18, }, "cost": 1.5, },
+    "latte": {
+        "ingredients": {
+            "water": 200,
+            "milk": 150,
+            "coffee": 24,
+        },
+        "cost": 2.5,
+    },
+    "cappuccino": {
+        "ingredients": {
+            "water": 250,
+            "milk": 100,
+            "coffee": 24,
+        },
+        "cost": 3.0,
+    }
+}
+
+resources = {
+    "water": 300,
+    "milk": 200,
+    "coffee": 100,
+    "money": 0.00
+}
+
+
+def user_menu_options():
+    user_menu_choose = input("""
+    **OUR MENU OPTIONS***
+    espresso
+    latte
+    cappuccino
+    status
+    add money
+    type your choice below:
+    """)
+    return user_menu_choose
+
+
+def user_add_cash():
+    print("***Please Insert Coins***")
+    quarters = input("How many quarters? ")
+    dimes = input("How many dimes? ")
+    nickels = input("How many nickels? ")
+    pennies = input("How many pennies? ")
+    total_cash = float(quarters) * .25 + float(dimes) * .10 + float(nickels) * .05 + float(pennies) * .01
+    #can be validated for when total cash is not greater than the chosen item add more to it or cancel
+    return total_cash
+
+
+def machine_report():
+    print(f"""
+    water available: {resources["water"]}
+    milk available: {resources["milk"]}
+    coffee available: {resources["coffee"]}
+    """)
+
+
+def prices_of_items():
+    price_espresso = MENU["espresso"]["cost"]
+    price_latte = MENU["latte"]["cost"]
+    price_cappuccino = MENU["cappuccino"]["cost"]
+    return price_espresso, price_latte, price_cappuccino
+
+
+def machine_availability():
+    water_avail = resources["water"]
+    milk_avail = resources["milk"]
+    coffee_avail = resources["coffee"]
+    money_avail = (resources["money"])
+    return water_avail, milk_avail, coffee_avail, money_avail
+
+
+def validate_purchase(item, water_avail, milk_avail, coffee_avail, money_avail):
+    item_cost = MENU[item]["cost"]
+    item_water = MENU[item]["ingredients"]["water"]
+    item_milk = MENU.get(item, {}).get("ingredients", {}).get("milk", 0)
+    item_coffee = MENU[item]["ingredients"]["coffee"]
+    valid_purchase = False
+
+    if item_cost > money_avail:
+        print("sorry add more money, purchase cannot be made :(")
+    elif item_water > water_avail:
+        print("sorry not enough water, purchase cannot be made :(")
+    elif item_milk > milk_avail:
+        print("sorry not enough milk, purchase cannot be made :(")
+    elif item_coffee > coffee_avail:
+        print("sorry not enough coffee, purchase cannot be made :(")
+    else:
+        print("purchase added to cart!")
+        valid_purchase = True
+    return valid_purchase
+
+
+def decrease_resources(item, water_av, milk_av, coffee_av, money_av):
+    water_av -= MENU[item]["ingredients"]["water"]
+    milk_av -= MENU.get(item, {}).get("ingredients", {}).get("milk", 0)
+    coffee_av -= MENU[item]["ingredients"]["coffee"]
+    money_av -= MENU[item]["cost"]
+    return water_av, milk_av, coffee_av, money_av
+
+
+logo = """                    (
+                        )     (
+                 ___...(-------)-....___
+             .---       )    (          ---.
+       .-'``'|-._             )         _.-|
+      /  .--.|   `----...........-----`   |
+     /  /    |                             |
+     |  |    |                             |
+      \  \   |                             |
+       `\ `\ |                             |
+         `\ `|                             |
+         _/ /\                             /
+        (__/  \                           /
+     _..---` \                         /`---.._
+  .-'           \                       /          '-.
+ :               `-.__             __.-'              :
+ :                  ) ---...--- (                 :
+  '._               `"--...___...--"`              _.'
+    --..__                              __..------
+     '._     ----.....______.....-------     _.'
+        --..,,_____            _____,,..---
+                      -------------`"""
+
+print(logo)
+machine_on = True
+while machine_on:
+    price_for_cart = 0
+    water_available, milk_available, coffee_available, money_available = machine_availability()
+    prc_espresso, prc_latte, prc_cappuccino = prices_of_items()
+
+    add_more = True
+    while add_more:
+        user_chose = user_menu_options()
+        while (
+                user_chose != 'espresso' and user_chose != 'latte' and user_chose != 'cappuccino' and user_chose != 'add money' and user_chose != 'status'):
+            user_chose = user_menu_options()
+        if user_chose == 'status':
+            machine_report()
+        elif user_chose == 'add_money':
+            total_add = user_add_cash()
+            money_available += total_add
+            print(f"You have: ${money_available} to use")
+        else:
+            total_add2 = user_add_cash()
+            money_available += total_add2
+            print(f"You have ${total_add2} available")
+            if user_chose == 'espresso':
+                print(f"The price of your espresso: {prc_espresso}")
+                purchase_made = validate_purchase(user_chose, water_available, milk_available, coffee_available,
+                                                  money_available)
+                if purchase_made:
+                    water_available, milk_available, coffee_available, money_available = decrease_resources(user_chose,
+                                                                                                            water_available,
+                                                                                                            milk_available,
+                                                                                                            coffee_available,
+                                                                                                            money_available)
+            elif user_chose == 'latte':
+                print(f"The price of your latte: {prc_latte}")
+                purchase_made = validate_purchase(user_chose, water_available, milk_available, coffee_available,
+                                                  money_available)
+                if purchase_made:
+                    water_available, milk_available, coffee_available, money_available = decrease_resources(user_chose,
+                                                                                                            water_available,
+                                                                                                            milk_available,
+                                                                                                            coffee_available,
+                                                                                                            money_available)
+                else:
+                    print(f"The price of your cappuccino: {prc_cappuccino}")
+                    purchase_made = validate_purchase(user_chose, water_available, milk_available, coffee_available,
+                                                      money_available)
+                    if purchase_made:
+                        water_available, milk_available, coffee_available, money_available = decrease_resources(user_chose,
+                                                                                                                water_available,
+                                                                                                                milk_available,
+                                                                                                                coffee_available,
+                                                                                                                money_available)
+
+        print(f"You have ${money_available} to use")
+        print(f"You have {water_available} water to use")
+        print(f"You have {milk_available} milk to use")
+        print(f"You have {coffee_available} coffee to use")
+        more_items = input("Anything else? 'y' 'n' ")
+        if more_items == 'n':
+            add_more = False
+
+    print(water_available)
+    print(milk_available)
+    print(coffee_available)
+    print(f"Here is your change of {money_available}")
+
+    more_orders = input("Want to create another order? \n")
+    if more_orders == 'n':
+        machine_on = False
+    else:
+        os.system("clear")
