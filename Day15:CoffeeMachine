@@ -239,7 +239,7 @@ while machine_on:
                                                                                                             coffee_available,
                                                                                                             money_available)
 
-        print(f"\nYou have ${money_available} to use")
+        print(f"\nYou have ${money_available:.2f} to use")
         print(f"You have {water_available} water to use")
         print(f"You have {milk_available} milk to use")
         print(f"You have {coffee_available} coffee to use")
