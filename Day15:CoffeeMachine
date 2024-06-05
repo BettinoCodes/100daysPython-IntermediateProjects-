@@ -149,7 +149,7 @@ def validate_purchase(item, water_avail, milk_avail, coffee_avail, money_avail):
     elif item_coffee > coffee_avail:
         print("sorry not enough coffee, purchase cannot be made :(")
     else:
-        print("purchase added to cart!")
+        print(f"Your {item} is being made!")
         valid_purchase = True
     return valid_purchase
 
@@ -168,8 +168,8 @@ logo = """                    (
              .---       )    (          ---.
        .-'``'|-._             )         _.-|
       /  .--.|   `----...........-----`   |
-     /  /    |                             |
-     |  |    |                             |
+     /  /    |                            |
+     |  |    |                            |
         |                                 |
        ` ` |                              |
          ``|                              |
@@ -203,11 +203,11 @@ while machine_on:
         elif user_chose == 'add_money':
             total_add = user_add_cash()
             money_available += total_add
-            print(f"You have: ${money_available} to use")
+            print(f"You added ${money_available} to your amount")
         else:
-            total_add2 = user_add_cash()
+            total_add2 = round(user_add_cash(), 2)
             money_available += total_add2
-            print(f"You have ${total_add2} available")
+            print(f"You added ${total_add2} to your amount")
             if user_chose == 'espresso':
                 print(f"The price of your espresso: {prc_espresso}")
                 purchase_made = validate_purchase(user_chose, water_available, milk_available, coffee_available,
@@ -228,18 +228,18 @@ while machine_on:
                                                                                                             milk_available,
                                                                                                             coffee_available,
                                                                                                             money_available)
-                else:
-                    print(f"The price of your cappuccino: {prc_cappuccino}")
-                    purchase_made = validate_purchase(user_chose, water_available, milk_available, coffee_available,
-                                                      money_available)
-                    if purchase_made:
-                        water_available, milk_available, coffee_available, money_available = decrease_resources(user_chose,
-                                                                                                                water_available,
-                                                                                                                milk_available,
-                                                                                                                coffee_available,
-                                                                                                                money_available)
+            else:
+                print(f"The price of your cappuccino: {prc_cappuccino}")
+                purchase_made = validate_purchase(user_chose, water_available, milk_available, coffee_available,
+                                                  money_available)
+                if purchase_made:
+                    water_available, milk_available, coffee_available, money_available = decrease_resources(user_chose,
+                                                                                                            water_available,
+                                                                                                            milk_available,
+                                                                                                            coffee_available,
+                                                                                                            money_available)
 
-        print(f"You have ${money_available} to use")
+        print(f"\nYou have ${money_available} to use")
         print(f"You have {water_available} water to use")
         print(f"You have {milk_available} milk to use")
         print(f"You have {coffee_available} coffee to use")
