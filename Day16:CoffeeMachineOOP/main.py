@@ -2,6 +2,7 @@ from menu import Menu, MenuItem
 from coffee_maker import CoffeeMaker
 from money_machine import MoneyMachine
 
+#Day 16 I was given classes and had to read their documentation for the functionalities, and learned about OOP and how much it helps in reducing code
 coffee_menu = Menu()
 coffee_making = CoffeeMaker()
 coffee_money = MoneyMachine()
