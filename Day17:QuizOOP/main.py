@@ -2,6 +2,8 @@ from data import question_data
 from question_model import Question
 from quiz_brain import QuizBrain
 
+#Day 17 I learned more on structuring my ideas into OOP and things to think about to dividing your program into partial functions from the creation of this Quiz that can be used to take random question from open
+#trivia DB API and work
 question_bank = []
 
 
