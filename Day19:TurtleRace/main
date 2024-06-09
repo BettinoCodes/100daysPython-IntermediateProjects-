@@ -1,0 +1,43 @@
+import random
+import turtle
+from turtle import Turtle, Screen
+
+#Day 19 I used turtle in order to create a randomized turtle race, I used a hashmap to represent the turtles with their color, and learned about using multiple instances from a class
+
+screen = Screen()
+screen.setup(width=500, height=500)
+
+user_chose = screen.textinput(title="Make your bet:", prompt="Which turtle you think will win the race? Enter a color:")
+colors = ["red", "yellow", "green", "orange", "blue", "purple"]
+forwards = [10, 15, 20, 25, 30]
+
+turtles = []
+for i in range(len(colors)):
+    turtles.append({"turtle": Turtle(), "color": colors[i]})
+
+height = -150
+for i in range(len(turtles)):
+    turtles[i]["turtle"].shape("turtle")
+    turtles[i]["turtle"].color(turtles[i]["color"])
+    turtles[i]["turtle"].penup()
+    turtles[i]["turtle"].goto(-225, height)
+    turtles[i]["turtle"].pendown()
+    height += 50
+
+winner = ''
+still_racing = True
+while still_racing:
+    for t in turtles:
+        t["turtle"].forward(random.choice(forwards))
+        if t["turtle"].position()[0] >= 230:
+            winner = t["color"]
+            still_racing = False
+            break
+
+if user_chose == winner:
+    print('Congrats, you won 600 dollars')
+else:
+    print("You lost 100 dollars oof")
+    print(f"{winner} won the race")
+
+screen.exitonclick()
