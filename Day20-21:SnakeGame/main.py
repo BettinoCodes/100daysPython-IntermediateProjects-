@@ -6,6 +6,7 @@ from food import Food
 import random
 from scoreboard import Scoreboard
 
+#On these two days I worked on a snake game using my knowledge on OOP I was able to build the game from 0, making it it my own using a list
 
 snake = Snake()
 screen = Screen()
