@@ -1,0 +1,35 @@
+from turtle import Turtle
+from player_bar import PlayerBar
+
+
+class AiBar(PlayerBar):
+    def __init__(self):
+        super().__init__()
+        self.x_position = -380
+        self.can_move_up = True
+        self.can_move_down = False
+
+    def move_up1(self):
+        for body in self.player_body:
+            new_y = body.ycor() + 20
+            body.goto(self.x_position, new_y)
+
+    def move_down1(self):
+        for body in self.player_body:
+            new_y = body.ycor() - 20
+            body.goto(self.x_position, new_y)
+
+    def move_up_down(self):
+        if self.player_body[0].ycor() <= 300 and self.can_move_up:
+            self.move_up()
+        else:
+            self.can_move_up = False
+            self.move_down()
+            self.can_move_down = True
+            if self.player_body[0].ycor() >= -200 and self.can_move_down:
+                self.move_down()
+            else:
+                self.can_move_down = False
+                self.move_down()
+                self.can_move_up = True
+
