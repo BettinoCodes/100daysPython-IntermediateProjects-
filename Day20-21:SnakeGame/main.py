@@ -14,7 +14,6 @@ screen.bgcolor('black')
 screen.setup(600, 600)
 screen.listen()
 screen.tracer(0)
-screen.listen()
 screen.title("Bs 100 Day Python Snake Game")
 
 
