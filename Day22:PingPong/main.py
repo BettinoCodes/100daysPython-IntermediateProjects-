@@ -24,9 +24,6 @@ def player_control():
 player_bar.add_bar()
 aibar.add_bar()
 
-# for i in range(1, len(snake.body)):
-#         if sn_head.distance(snake.body[i].position()) < 10:
-# sn_head.distance(snake.body[i].position())
 
 game_on = True
 while game_on:
