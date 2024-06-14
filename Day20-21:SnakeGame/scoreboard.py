@@ -1,7 +1,7 @@
 from turtle import Turtle
 from food import Food
 
-with open("my_file.txt") as file:
+with open("data.txt") as file:
     high_num = file.read()
 
 the_high = int(high_num)
@@ -25,7 +25,7 @@ class Scoreboard(Turtle):
     def reset(self):
         if self.score > self.highscore:
             self.highscore = self.score
-            with open("my_file.txt", 'w') as f:
+            with open("data.txt", 'w') as f:
                 f.write(f"{self.highscore}")
         self.score = 0
         self.update_sb()
