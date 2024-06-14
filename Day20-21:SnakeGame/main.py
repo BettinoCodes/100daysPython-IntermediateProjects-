@@ -6,7 +6,6 @@ from food import Food
 import random
 from scoreboard import Scoreboard
 
-#On these two days I worked on a snake game using my knowledge on OOP I was able to build the game from 0, making it it my own using a list
 
 snake = Snake()
 screen = Screen()
@@ -14,6 +13,7 @@ screen.bgcolor('black')
 screen.setup(600, 600)
 screen.listen()
 screen.tracer(0)
+screen.listen()
 screen.title("Bs 100 Day Python Snake Game")
 
 
@@ -44,20 +44,25 @@ while game_on :
         snake_head[len(snake_head) - 1].color('white')
         snake.no_pen_body()
 
-    if sn_head.xcor() > 300 or sn_head.xcor() < -300:
-        scoreboard.game_over()
-        game_on = False
+    if sn_head.xcor() > 290 or sn_head.xcor() < -290:
+        scoreboard.reset()
+        snake.reset()
 
-    if sn_head.ycor() > 300 or sn_head.ycor() < -300:
-        scoreboard.game_over()
-        game_on = False
+    if sn_head.ycor() > 300 or sn_head.ycor() < -290:
+        scoreboard.reset()
+        snake.reset()
 
     for i in range(1, len(snake.body)):
         if sn_head.distance(snake.body[i].position()) < 10:
-            game_on = False
-            scoreboard.game_over()
+            scoreboard.reset()
+            snake.reset()
 
 
 
 
 screen.exitonclick()
+with open("my_file.txt") as file:
+    contents = file.read()
+    print(contents)
+
+
