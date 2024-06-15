@@ -11,7 +11,7 @@ turtle.shape(image)
 
 
 data = pandas.read_csv("50_states.csv")
-
+#
 # if answer_state in data["state"]:
 #     ans = Turtle()
 #     ans.write(answer_state)
@@ -32,6 +32,13 @@ while len(correct_states) != 50:
     answer_state = screen.textinput(title=f"Guess the state {len(correct_states)}/50", prompt="Write a state below: ").title()
 
     if answer_state == "Exit":
+        missed_states = [state for state in data["state"].tolist() if state not in correct_states]
+        dict_states = {
+            "Missed States": missed_states
+        }
+        df = pandas.DataFrame(dict_states)
+        df.to_csv("missed_states")
+
         break
 
     if answer_state in data["state"].tolist():
@@ -43,16 +50,5 @@ while len(correct_states) != 50:
         ans.write(answer_state)
         correct_states.append(answer_state)
 
-missed_states = []
-for states in data["state"].tolist():
-    if states not in correct_states:
-        missed_states.append(states)
-
-dict_states = {
-    "Missed States": missed_states
-}
-
-df = pandas.DataFrame(dict_states)
-df.to_csv("missed_states")
 
 screen.exitonclick()
