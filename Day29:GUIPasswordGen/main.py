@@ -38,13 +38,12 @@ def add_password():
     email_usern = email_input.get()
     password = password_input.get()
 
-    if website and email_usern and password:
-        tkinter.messagebox.showinfo("Status: Data Submitted")
+        if website and email_usern and password:
+        tkinter.messagebox.showinfo(title="Status", message="Data Submitted")
         with open("passwords.txt", "a+") as f:
-            f.write(f"{website} | {email_usern} | {password}\n")
+            f.write(f"WEBSITE: {website} | EMAIL: {email_usern} | PASSWORD: {password}\n")
     else:
-        tkinter.messagebox.showwarning("Error, please fill in all fields")
-
+        tkinter.messagebox.showwarning(title="Status", message="Error, please fill in all fields")
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
