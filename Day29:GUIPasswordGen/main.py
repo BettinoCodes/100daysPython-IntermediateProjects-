@@ -1,4 +1,4 @@
-import tkinter.messagebox
+import tkinter
 from tkinter import *
 import random
 from data_characters import characters_dict
