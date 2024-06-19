@@ -1,5 +1,3 @@
-import random
-
 characters_dict = {
     1: "a",
     2: "b",
