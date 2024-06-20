@@ -20,6 +20,9 @@ for (index, row) in student_data_frame.iterrows():
 # Keyword Method with iterrows()
 # {new_key:new_value for (index, row) in df.iterrows()}
 user_name = input("What is your name: ")
+while not user_name.isalpha():
+    print("Only letters!")
+    user_name = input("What is your name: ")
 
 nato_phonetic = pandas.read_csv("nato_phonetic_alphabet.csv")
 
