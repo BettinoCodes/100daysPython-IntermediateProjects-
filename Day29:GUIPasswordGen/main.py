@@ -1,7 +1,8 @@
-import tkinter
+import tkinter.messagebox
 from tkinter import *
 import random
 from data_characters import characters_dict
+import json
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
@@ -34,18 +35,55 @@ def generate_password():
 
 
 def add_password():
-    website = website_input.get()
-    email_usern = email_input.get()
-    password = password_input.get()
+    website = website_input.get().lower()
+    email_usern = email_input.get().lower()
+    password = password_input.get().lower()
 
-        if website and email_usern and password:
+    new_data = {website:{
+        "email": email_usern,
+        "password": password,
+    }}
+
+    if website and email_usern and password:
         tkinter.messagebox.showinfo(title="Status", message="Data Submitted")
-        with open("passwords.txt", "a+") as f:
-            f.write(f"WEBSITE: {website} | EMAIL: {email_usern} | PASSWORD: {password}\n")
+        try:
+            with open("passwords.json", "r") as data_file:
+                # json.dump(new_data, data_file, indent=4)
+                data = json.load(data_file)
+        except FileNotFoundError:
+            with open("passwords.json", 'w') as data_file:
+                json.dump(new_data, data_file, indent=4)
+        else:
+            data.update(new_data)
+            with open("passwords.json", 'w') as data_file:
+                json.dump(data, data_file, indent=4)
+
+        finally:
+            website_input.delete(0, END)
+            email_input.delete(0, END)
+            password_input.delete(0, END)
+
     else:
         tkinter.messagebox.showwarning(title="Status", message="Error, please fill in all fields")
 
+
+# ---------------------------- Search Password ------------------------------- #
+
+def search_password():
+    with open("passwords.json", 'r') as data_file:
+        data_dict = json.load(data_file)
+
+    website = website_input.get().lower()
+
+    try:
+        tkinter.messagebox.showinfo(title="Your Info", message=f"email: {data_dict[website]["email"]}\npassword:{data_dict[website]["password"]}")
+    except KeyError:
+        tkinter.messagebox.showinfo(title="Your Info",
+                                    message=f"You dont have any information for that site")
+
+
 # ---------------------------- UI SETUP ------------------------------- #
+
 window = Tk()
 window.configure(background='white', padx=20, pady=20)
 
@@ -74,6 +112,9 @@ password_input.grid(column=1, row=5, columnspan=1)
 
 password_button = Button(text="Generate Password", command=generate_password)
 password_button.grid(column=2, row=5, columnspan=2)
+
+search_button = Button(text="Search", command=search_password, width=14)
+search_button.grid(column=2, row=3, columnspan=2)
 
 add_button = Button(text="Add", command=add_password, width=20, height=1)
 add_button.grid(column=1, row=7, columnspan=2)
