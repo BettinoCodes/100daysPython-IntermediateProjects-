@@ -11,6 +11,7 @@ data_questions = response.json()["results"]
 print(data_questions)
 
 current_question = Question(text=None, answer=None)
+correct = 0
 
 question_bank = []
 for question in data_questions:
@@ -19,6 +20,7 @@ for question in data_questions:
     new_quest = Question(text=question_text, answer=question_ans)
     question_bank.append(new_quest)
 
+question_amount = len(question_bank)
 for questions in question_bank:
     print(questions.text, questions.answer)
 
@@ -29,6 +31,11 @@ def choose_question():
     question_bank.remove(current_question)
     if len(question_bank) == 0:
         canvas.itemconfig(quote_text, text="That was all folks see you on the next one")
+        print(f"FINAL SCORE: {correct}/{question_amount}")
+        false_button.destroy()
+        true_button.destroy()
+        score_label = Label(text=f"FINAL SCORE: {correct}/{question_amount}", highlightthickness=0, width=15, font=("Arial", 20, "bold"))
+        score_label.grid(row=1, column=1)
 
 
 def correct_back_ground():
@@ -45,20 +52,27 @@ def white_back_ground():
     canvas.configure(bg='white')
 
 def chose_true_ans():
+    global correct
     ans = "True"
     if ans == current_question.answer:
         correct_back_ground()
+        correct += 1
+        print(correct)
     else:
         incorrect_back_ground()
-    choose_question()
+    if len(question_bank) != 0:
+        choose_question()
 
 def chose_false_ans():
+    global correct
     ans = "False"
     if ans == current_question.answer:
         correct_back_ground()
+        correct += 1
     else:
         incorrect_back_ground()
-    choose_question()
+    if len(question_bank) != 0:
+        choose_question()
 
 
 window = Tk()
@@ -79,7 +93,7 @@ false_button.grid(row=1, column=2)
 
 choose_question()
 
-if len(question_bank) == 0:
-    canvas.itemconfig(quote_text, text="That was all folks see you on the next one")
+
+print(f"{correct}/{question_amount}")
 
 window.mainloop()
