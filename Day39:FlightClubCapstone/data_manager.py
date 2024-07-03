@@ -14,12 +14,10 @@ class DataManager:
     def add_to_excel(self):
         location_inp = input("Name a new location you want to go to: ")
         cheapest_price = input("What is the cheapest price so far? ")
-        IATA_num = input("name a project IATA Code: ")
         body = {
             "price": {
                 'city': location_inp,
                 'lowestPrice': cheapest_price,
-                'iataCode': IATA_num
             }
         }
 
