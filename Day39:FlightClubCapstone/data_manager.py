@@ -5,7 +5,8 @@ import json
 class DataManager:
     #This class is responsible for talking to the Google Sheet.
     def __init__(self):
-        self.url = 'https://api.sheety.co/yourapik/flightDealsPrices/prices'
+        self.url = 'https://api.sheety.co/yourkey/flightDealsPrices/prices'
+        self.user_emails = self.get_users_emails()
 
     def show_excel(self):
         response = requests.get(url=self.url)
@@ -14,10 +15,12 @@ class DataManager:
     def add_to_excel(self):
         location_inp = input("Name a new location you want to go to: ")
         cheapest_price = input("What is the cheapest price so far? ")
+        IATA_num = input("name a project IATA Code: ")
         body = {
             "price": {
                 'city': location_inp,
                 'lowestPrice': cheapest_price,
+                'iataCode': IATA_num
             }
         }
 
@@ -29,7 +32,7 @@ class DataManager:
         print(response.status_code)
 
     def add_testing(self, i, value_str="TESTING"):
-            url = f'https://api.sheety.co/yourapikey/flightDealsPrices/prices/{i}'
+            url = f'https://api.sheety.co/yourkey/flightDealsPrices/prices/{i}'
             body = {
                 "price": {
                     'iataCode': value_str
@@ -45,7 +48,7 @@ class DataManager:
 
     def add_test(self, value_str="TESTING"):
         for i in range(2, 11):
-            url = f'https://api.sheety.co/yourapikey/flightDealsPrices/prices/{i}'
+            url = f'https://api.sheety.co/yourkey/flightDealsPrices/prices/{i}'
             body = {
                 "price": {
                     'iataCode': value_str
@@ -58,4 +61,9 @@ class DataManager:
             response = requests.put(url=url, headers=headers, data=json.dumps(body))
             print(response.status_code)
             print(response.text)
+
+    def get_users_emails(self):
+        url = 'https://api.sheety.co/yourkey/flightDealsPrices/users'
+        response = requests.get(url)
+        return response.json()["users"]
 
