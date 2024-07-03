@@ -11,9 +11,46 @@ data_manage = DataManager()
 notify_manage = NotificationManager()
 flight_search = FlightSearch()
 
+
 # print(flight_data.data_flights)
 last_row = flight_data.data_flights[len(flight_data.data_flights)-1]['id'] + 1
 print(f"last: {last_row}")
+
+
+def cheapest_depart_in_6_months_prices():
+    global date_now, target_date
+    all_prices_til_date = []
+    for city_number in range(len(flight_data.data_flights) - 5):
+        iata_code = flight_data.data_flights[city_number]["iataCode"]
+        while date_now <= target_date:
+            new_date = date_now.strftime("%Y-%m-%d")
+            print(f"Loading... Current date: {new_date}")
+            dict_of_data = flight_search.get_min_price_day(destination=iata_code, depart_date=new_date,
+                                                           max_price=flight_data.data_flights[city_number][
+                                                               "lowestPrice"])
+            all_prices_til_date.append(dict_of_data)
+            date_now += datetime.timedelta(days=1)
+        date_now = datetime.datetime.now()
+        city_number += 1
+
+    return all_prices_til_date
+
+def cheapest_by_day_each():
+    for city_number in range(len(flight_data.data_flights)):
+        iata_code = flight_data.data_flights[city_number]["iataCode"]
+        print(f"Searching for {iata_code}...")
+        lowest_price = flight_data.data_flights[city_number]["lowestPrice"]
+        cheapest = flight_search.get_min_days(iata_code, depart_date=date_now, return_date=target_date, max_price=lowest_price)
+        if cheapest == "None":
+            print(f"No flights cheaper for {iata_code} on {date_now}")
+        else:
+            message_send = (f"WE FOUND CHEAPER FLIGHT TODAY FOR {iata_code}!\n"
+                            f"Price: ${cheapest["mingrand"]}\n"
+                            f"Airport: {cheapest["Flight"]}\n"
+                            f"Departure Date: {cheapest["Departure Date"]}\n"
+                            f"Return Date: {cheapest["Return Date"]}\n"
+                            )
+            notify_manage.send_notification(message_send)
 
 
 #adding the IATA to the sheet
@@ -23,33 +60,8 @@ print(f"last: {last_row}")
 
 
 date_now = datetime.datetime.now()
-target_date = date_now + datetime.timedelta(days=5)
+target_date = date_now + datetime.timedelta(days=30 * 6)
 cop_date = datetime.datetime.now()
-def get_lowest_price(list_prices):
-    lowest = list_prices[0]["price"]
-    for price in list_prices:
-        if price["price"] < lowest:
-            lowest = price["price"]
-    return lowest
-
-city_number = 0
-all_prices_til_date = []
-for city_number in range(len(flight_data.data_flights) - 5):
-    iata_code = flight_data.data_flights[city_number]["iataCode"]
-    cit = flight_data.data_flights[city_number]["city"]
-    while date_now <= target_date:
-        new_date = date_now.strftime("%Y-%m-%d")
-        print(f"Loading... Current date: {new_date}")
-        dict_of_data = flight_search.get_min_price_day(destination=iata_code, depart_date=new_date, max_price=flight_data.data_flights[city_number]["lowestPrice"])
-        all_prices_til_date.append(dict_of_data)
-        date_now += datetime.timedelta(days=1)
-    date_now = datetime.datetime.now()
-    city_number += 1
-
-print(all_prices_til_date)
 
 
-
-
-
-
+cheapest_by_day_each()
