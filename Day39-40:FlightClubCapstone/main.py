@@ -63,7 +63,7 @@ def cheapest_by_day_each_email():
             list_messages += f"No flights cheaper for {iata_code} on {date_now}\n"
         else:
             list_messages += (
-                            f"WE FOUND CHEAPER FLIGHT TODAY FOR {iata_code}!\n"
+                            f"\nWE FOUND CHEAPER FLIGHT TODAY FOR {iata_code}!\n"
                             f"Price: ${cheapest["mingrand"]}\n"
                             f"Airport: {cheapest["Flight"]}\n"
                             f"Departure Date: {cheapest["Departure Date"]}\n"
@@ -86,7 +86,7 @@ cop_date = datetime.datetime.now()
 # cheapest_by_day_each()
 
 # for emails in data sheet
-for emails in data_manage.user_emails:
+for emails in flight_data.user_emails:
     message = cheapest_by_day_each_email()
     send_to = emails['whatEmailDoYouWantToUse?']
     print(send_to)
