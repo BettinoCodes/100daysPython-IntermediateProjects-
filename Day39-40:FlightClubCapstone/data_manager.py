@@ -3,10 +3,26 @@ import json
 
 
 class DataManager:
-    #This class is responsible for talking to the Google Sheet.
+    """
+    This class is responsible for talking to the Google Sheet.
+    Attributes
+    ----------
+    URL : str
+        The URL connected to the sheet.
+
+    Methods
+    -------
+    show_excel(self):
+        returns the information of the current sheet
+    add_to_excel(self):
+        allowing user to add a new row of information to the sheet
+    add_testing(self):
+        this add the IATA code to the current row based on the IATA
+    
+        
+    """
     def __init__(self):
-        self.url = 'https://api.sheety.co/yourkey/flightDealsPrices/prices'
-        self.user_emails = self.get_users_emails()
+        self.url = 'https://api.sheety.co/00cf11bfb63c9d72833e19f6e988387d/flightDealsPrices/prices'
 
     def show_excel(self):
         response = requests.get(url=self.url)
@@ -32,7 +48,7 @@ class DataManager:
         print(response.status_code)
 
     def add_testing(self, i, value_str="TESTING"):
-            url = f'https://api.sheety.co/yourkey/flightDealsPrices/prices/{i}'
+            url = f'https://api.sheety.co/00cf11bfb63c9d72833e19f6e988387d/flightDealsPrices/prices/{i}'
             body = {
                 "price": {
                     'iataCode': value_str
@@ -45,25 +61,3 @@ class DataManager:
             response = requests.put(url=url, headers=headers, data=json.dumps(body))
             print(response.status_code)
             print(response.text)
-
-    def add_test(self, value_str="TESTING"):
-        for i in range(2, 11):
-            url = f'https://api.sheety.co/yourkey/flightDealsPrices/prices/{i}'
-            body = {
-                "price": {
-                    'iataCode': value_str
-                }
-            }
-
-            headers = {
-                'Content-Type': 'application/json'
-            }
-            response = requests.put(url=url, headers=headers, data=json.dumps(body))
-            print(response.status_code)
-            print(response.text)
-
-    def get_users_emails(self):
-        url = 'https://api.sheety.co/yourkey/flightDealsPrices/users'
-        response = requests.get(url)
-        return response.json()["users"]
-
